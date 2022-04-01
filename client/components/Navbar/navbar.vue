@@ -1,10 +1,23 @@
 <template>
-    <nav v-if="$auth.loggedIn">
+    <nav>
         <div class="navLinks">
             <NuxtLink to="/" class="link">Home</NuxtLink>
             <NuxtLink to="/contact" class="link">Contact</NuxtLink>
+            
         </div>
-        <div @click.prevent="logout()" class="link log">Déconnexion</div>
+
+        <div class="logs">
+            <div v-if="!$auth.loggedIn">
+                <NuxtLink to="/login" class="link">Se connecter</NuxtLink>
+                <NuxtLink to="/register" class="link">S'enregistrer</NuxtLink>
+            </div>
+            <div v-else>
+                <NuxtLink to="/profile" class="link">{{this.$auth.user.name}}</NuxtLink>
+                <span @click.prevent="logout()" class="link">Déconnexion</span>
+            </div>
+        </div>
+
+        
     </nav>
 </template>
 
@@ -12,11 +25,8 @@
 export default {
     methods: {
         async logout() {
-            try {
-                await this.$auth.logout()
-            } catch (error) {
-                console.log(error)
-            }
+            await this.$auth.logout()
+            this.$router.push('/')
         }
     }
 }
@@ -47,7 +57,7 @@ nav {
         }
     }
 
-    .log {
+    .logs {
         position: absolute;
         right: 25px;
     }
